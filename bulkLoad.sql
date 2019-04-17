@@ -1,0 +1,4 @@
+SET DATEFORMAT dmy; 
+BULK INSERT mainTable
+FROM 'C:\DATA\GeneratedData.txt'
+WITH (FIRSTROW = 2,FIELDTERMINATOR= ',', ROWTERMINATOR = '\n');
