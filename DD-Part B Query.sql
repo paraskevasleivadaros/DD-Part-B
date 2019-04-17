@@ -56,6 +56,19 @@ WHERE Staff.staffNo = Booking.staffNo
 GROUP BY staffName, staffSurname
 ORDER BY TotalBookings DESC;
 
--- 4c
+-- 4c Δεν είμαι σίγουρος
 
+SELECT COUNT(Booking.bookCode)
+FROM Rental, Category, Emplacement, Camping, Booking 
+WHERE Category.catCode='A' AND Category.catCode=Emplacement.catCode AND Emplacement.campCode=Camping.campCode AND Rental.bookCode=Booking.bookCode;
+
+-- 4d Δεν είμαι σίγουρος
+
+SELECT custSurname, custName, COUNT(Booking.custCode) AS TotalBookings
+FROM Customer, Booking
+WHERE Customer.custCode=Booking.custCode AND bookDt='2000'
+GROUP BY custSurname, custName
+ORDER BY custSurname;
+
+-- 4e
 
