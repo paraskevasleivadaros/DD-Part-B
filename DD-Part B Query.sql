@@ -1,3 +1,5 @@
+-- 3
+
 INSERT INTO Staff (staffNo, staffName, staffSurname)
 SELECT DISTINCT (staffNo), staffName, staffSurname
 FROM MainTable;
@@ -56,19 +58,35 @@ WHERE Staff.staffNo = Booking.staffNo
 GROUP BY staffName, staffSurname
 ORDER BY TotalBookings DESC;
 
--- 4c Δεν είμαι σίγουρος
+-- 4c 
 
-SELECT COUNT(Booking.bookCode)
+SELECT COUNT(Booking.bookCode) AS CategoryABookings
 FROM Rental, Category, Emplacement, Camping, Booking 
-WHERE Category.catCode='A' AND Category.catCode=Emplacement.catCode AND Emplacement.campCode=Camping.campCode AND Rental.bookCode=Booking.bookCode;
+WHERE Category.catCode='A' AND Category.catCode = Emplacement.catCode AND Emplacement.campCode = Camping.campCode AND Rental.bookCode = Booking.bookCode;
 
--- 4d Δεν είμαι σίγουρος
+-- 4d 
 
-SELECT custSurname, custName, COUNT(Booking.custCode) AS TotalBookings
-FROM Customer, Booking
-WHERE Customer.custCode=Booking.custCode AND bookDt='2000'
+SELECT custSurname, custName, COUNT(Booking.custCode) AS Year2000Bookings
+FROM Customer LEFT JOIN Booking
+ON Customer.custCode = Booking.custCode
+WHERE  bookDt BETWEEN '2000-01-01' AND '2000-12-31'
 GROUP BY custSurname, custName
 ORDER BY custSurname;
 
+-- 4d ΕΛΕΓΧΟΣ ΠΩΣ ΙΣΧΥΕΙ ΑΥΤΟ ΠΟΥ ΓΡΑΨΑΜΕ:
+SELECT DISTINCT Customer.custName, Booking.bookDt
+FROM Customer, Booking, Rental, Emplacement, Camping
+WHERE Customer.custCode = Booking.custCode AND bookDt BETWEEN '2000-01-01' AND '2000-12-31' AND Booking.bookCode = Rental.bookCode AND Emplacement.campCode = Camping.campCode
+GROUP BY Booking.bookDt, Customer.custName
+ORDER BY Booking.bookDt, Customer.custName;
+
 -- 4e
+
+SELECT Camping.campName, SUM(Category.unitCost * (DATEDIFF(DAY, Rental.startDt, Rental.endDt)+1) * noPers) AS TotalProfits
+FROM Camping, Emplacement, Rental, Category
+WHERE Camping.campCode = Emplacement.campCode AND Category.catCode = Emplacement.catCode AND Rental.campCode = Emplacement.campCode AND Rental.empNo = Emplacement.empNo
+GROUP BY Camping.campName
+ORDER BY Camping.campName
+
+-- 5
 
